@@ -1,9 +1,9 @@
 -- Table: public.countries
 DROP TABLE IF EXISTS public.countries CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.countries
+CREATE TABLE  public.countries
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     CONSTRAINT countries_pkey PRIMARY KEY (id)
 )
@@ -17,9 +17,9 @@ ALTER TABLE IF EXISTS public.countries
 
 DROP TABLE IF EXISTS public.emploees CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.emploees
+CREATE TABLE  public.emploees
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     "position" integer NOT NULL,
     "birth year" date NOT NULL,
@@ -45,7 +45,7 @@ ALTER TABLE IF EXISTS public.emploees
 
 DROP INDEX IF EXISTS public."position";
 
-CREATE INDEX IF NOT EXISTS "position"
+CREATE INDEX  "position"
     ON public.emploees USING btree
     ("position" ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -54,9 +54,9 @@ CREATE INDEX IF NOT EXISTS "position"
 
 DROP TABLE IF EXISTS public.emploees_stocks CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.emploees_stocks
+CREATE TABLE  public.emploees_stocks
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     stock_id integer NOT NULL,
     emploee_id integer NOT NULL,
     CONSTRAINT emploees_stocks_pkey PRIMARY KEY (id),
@@ -80,7 +80,7 @@ ALTER TABLE IF EXISTS public.emploees_stocks
 
 DROP INDEX IF EXISTS public.emploee CASCADE;
 
-CREATE INDEX IF NOT EXISTS emploee
+CREATE INDEX  emploee
     ON public.emploees_stocks USING btree
     (emploee_id ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -88,7 +88,7 @@ CREATE INDEX IF NOT EXISTS emploee
 
 DROP INDEX IF EXISTS public.emploee_id;
 
-CREATE INDEX IF NOT EXISTS emploee_id
+CREATE INDEX  emploee_id
     ON public.emploees_stocks USING btree
     (emploee_id ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -97,9 +97,9 @@ CREATE INDEX IF NOT EXISTS emploee_id
 
 DROP TABLE IF EXISTS public.items CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.items
+CREATE TABLE  public.items
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     type integer NOT NULL,
     stock integer NOT NULL,
     name VARCHAR NOT NULL,
@@ -137,7 +137,7 @@ ALTER TABLE IF EXISTS public.items
 
 DROP INDEX IF EXISTS public.stock;
 
-CREATE INDEX IF NOT EXISTS stock
+CREATE INDEX  stock
     ON public.items USING btree
     (stock ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -145,7 +145,7 @@ CREATE INDEX IF NOT EXISTS stock
 
 DROP INDEX IF EXISTS public.type;
 
-CREATE INDEX IF NOT EXISTS type
+CREATE INDEX  type
     ON public.items USING btree
     (type ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -154,9 +154,9 @@ CREATE INDEX IF NOT EXISTS type
 
 DROP TABLE IF EXISTS public.places CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.places
+CREATE TABLE  public.places
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     "Name" VARCHAR NOT NULL,
     "Organization" integer,
     longitude double precision NOT NULL,
@@ -178,7 +178,7 @@ ALTER TABLE IF EXISTS public.places
 
 DROP INDEX IF EXISTS public.country;
 
-CREATE INDEX IF NOT EXISTS country
+CREATE INDEX  country
     ON public.places USING btree
     ("Country" ASC NULLS LAST)
     TABLESPACE pg_default;
@@ -186,9 +186,9 @@ CREATE INDEX IF NOT EXISTS country
 
 DROP TABLE IF EXISTS public.positions CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.positions
+CREATE TABLE  public.positions
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     CONSTRAINT positions_pkey PRIMARY KEY (id)
 )
@@ -201,9 +201,9 @@ ALTER TABLE IF EXISTS public.positions
 
 DROP TABLE IF EXISTS public.priorities CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.priorities
+CREATE TABLE  public.priorities
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     "number" integer NOT NULL,
     CONSTRAINT priority_pkey PRIMARY KEY (id)
 )
@@ -216,9 +216,9 @@ ALTER TABLE IF EXISTS public.priorities
 
 DROP TABLE IF EXISTS public.stocks CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.stocks
+CREATE TABLE  public.stocks
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR,
     longitude double precision NOT NULL,
     latitude double precision NOT NULL,
@@ -240,9 +240,9 @@ ALTER TABLE IF EXISTS public.stocks
 
 DROP TABLE IF EXISTS public.types CASCADE;
 
-CREATE TABLE IF NOT EXISTS public.types
+CREATE TABLE  public.types
 (
-    id integer NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     CONSTRAINT types_pkey PRIMARY KEY (id)
 )
