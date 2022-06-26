@@ -9,9 +9,9 @@ from rich.console import Console
 from parser import Client
 
 class DBWorker():
-    def __init__(self) -> None:
+    def __init__(self, db_name, user, password, host, port=5432) -> None:
         self.console = Console()
-        self.connection, self.cursor = self.establish_connection()
+        self.connection, self.cursor = self.establish_connection(db_name=db_name, user=user, password=password, host=host, port=port)
         self.init_db()
     
     def str_time_prop(self,start, end, time_format, prop):
@@ -29,14 +29,14 @@ class DBWorker():
     def random_date(self, start, end, prop):
         return self.str_time_prop(start, end, '%Y-%m-%d', prop)
 
-    def establish_connection(self):
+    def establish_connection(self, db_name, user, host, password, port):
         try:
             connection = connect(
-                dbname = "course",
-                user="postgres",
-                host="localhost",
-                password="postgres",
-                port=8014
+                dbname = db_name,
+                user=user,
+                host=host,
+                password=password,
+                port=port
             )
             cursor = connection.cursor()
         except Exception as err:
@@ -195,8 +195,3 @@ class DBWorker():
     def close(self):
         self.cursor.close()
         self.connection.close()
-
-if __name__ == "__main__":
-    worker = DBWorker()
-    worker.generate()
-    worker.close()
