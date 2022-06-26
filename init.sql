@@ -1,10 +1,10 @@
 -- Table: public.countries
-DROP TABLE IF EXISTS public.countries;
+DROP TABLE IF EXISTS public.countries CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.countries
 (
     id integer NOT NULL,
-    name "char" NOT NULL,
+    name VARCHAR NOT NULL,
     CONSTRAINT countries_pkey PRIMARY KEY (id)
 )
 
@@ -15,12 +15,12 @@ ALTER TABLE IF EXISTS public.countries
 
 -- Table: public.emploees
 
-DROP TABLE IF EXISTS public.emploees;
+DROP TABLE IF EXISTS public.emploees CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.emploees
 (
     id integer NOT NULL,
-    name "char" NOT NULL,
+    name VARCHAR NOT NULL,
     "position" integer NOT NULL,
     "birth year" date NOT NULL,
     priority integer NOT NULL,
@@ -52,7 +52,7 @@ CREATE INDEX IF NOT EXISTS "position"
 
 -- Table: public.emploees_stocks
 
-DROP TABLE IF EXISTS public.emploees_stocks;
+DROP TABLE IF EXISTS public.emploees_stocks CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.emploees_stocks
 (
@@ -78,7 +78,7 @@ ALTER TABLE IF EXISTS public.emploees_stocks
     OWNER to postgres;
 -- Index: emploee
 
-DROP INDEX IF EXISTS public.emploee;
+DROP INDEX IF EXISTS public.emploee CASCADE;
 
 CREATE INDEX IF NOT EXISTS emploee
     ON public.emploees_stocks USING btree
@@ -95,14 +95,14 @@ CREATE INDEX IF NOT EXISTS emploee_id
 
 -- Table: public.items
 
-DROP TABLE IF EXISTS public.items;
+DROP TABLE IF EXISTS public.items CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.items
 (
     id integer NOT NULL,
     type integer NOT NULL,
     stock integer NOT NULL,
-    name "char"[] NOT NULL,
+    name VARCHAR NOT NULL,
     arrival_time time without time zone NOT NULL,
     arrival_date date NOT NULL,
     "point of departure" integer NOT NULL,
@@ -152,12 +152,12 @@ CREATE INDEX IF NOT EXISTS type
 
 -- Table: public.places
 
-DROP TABLE IF EXISTS public.places;
+DROP TABLE IF EXISTS public.places CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.places
 (
     id integer NOT NULL,
-    "Name" "char"[] NOT NULL,
+    "Name" VARCHAR NOT NULL,
     "Organization" integer,
     longitude double precision NOT NULL,
     latitude double precision NOT NULL,
@@ -184,12 +184,12 @@ CREATE INDEX IF NOT EXISTS country
     TABLESPACE pg_default;
 -- Table: public.positions
 
-DROP TABLE IF EXISTS public.positions;
+DROP TABLE IF EXISTS public.positions CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.positions
 (
     id integer NOT NULL,
-    name "char" NOT NULL,
+    name VARCHAR NOT NULL,
     CONSTRAINT positions_pkey PRIMARY KEY (id)
 )
 
@@ -199,7 +199,7 @@ ALTER TABLE IF EXISTS public.positions
     OWNER to postgres;
 -- Table: public.priorities
 
-DROP TABLE IF EXISTS public.priorities;
+DROP TABLE IF EXISTS public.priorities CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.priorities
 (
@@ -214,12 +214,12 @@ ALTER TABLE IF EXISTS public.priorities
     OWNER to postgres;
 -- Table: public.stocks
 
-DROP TABLE IF EXISTS public.stocks;
+DROP TABLE IF EXISTS public.stocks CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.stocks
 (
     id integer NOT NULL,
-    name "char"[],
+    name VARCHAR,
     longitude double precision NOT NULL,
     latitude double precision NOT NULL,
     country integer NOT NULL,
@@ -238,12 +238,12 @@ ALTER TABLE IF EXISTS public.stocks
 
 -- Table: public.types
 
-DROP TABLE IF EXISTS public.types;
+DROP TABLE IF EXISTS public.types CASCADE;
 
 CREATE TABLE IF NOT EXISTS public.types
 (
     id integer NOT NULL,
-    name "char"[] NOT NULL,
+    name VARCHAR NOT NULL,
     CONSTRAINT types_pkey PRIMARY KEY (id)
 )
 
