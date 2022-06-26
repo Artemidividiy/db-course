@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from random import randint
 import random
 import time
@@ -20,8 +20,14 @@ class DBWorker():
         ptime = stime + prop * (etime - stime)
         return time.strftime(time_format, time.localtime(ptime))
 
-    def random_date(self,start, end, prop):
+    def random_datetime(self,start, end, prop):
         return self.str_time_prop(start, end, '%m/%d/%Y %I:%M %p', prop)
+
+    def random_time(self, start, end, prop):
+        return self.str_time_prop(start, end, '%H:%M', prop)
+
+    def random_date(self, start, end, prop):
+        return self.str_time_prop(start, end, '%Y-%m-%d', prop)
 
     def establish_connection(self):
         try:
@@ -99,10 +105,10 @@ class DBWorker():
         start_time = datetime.now()
         for emploee in track(range(1000), description="generating emploees"):
             name = "'" + fake_ru.name() + "'"
-            birth_year = "'" + str(self.random_date("1/1/2008 1:30 PM", "1/1/2009 4:50 AM", random.random())) + "'"
+            birth_year = "'" + str(self.random_datetime("1/1/2008 1:30 PM", "1/1/2009 4:50 AM", random.random())) + "'"
             position = str(randint(1,15))
             priority = str(randint(1,20))
-            self.cursor.execute(sql.SQL('insert into public.emploees("name", "birth year", "position", "priority") values ({0}, {1}, {2}, {3})'.format(name, birth_year, position, priority)))
+            self.cursor.execute(sql.SQL('insert into public.emploees("name", "birth year", "position", "priority") values ({0}, {1}, {2}, {3});'.format(name, birth_year, position, priority)))
             self.connection.commit()
         self.console.log("emploees generated successfully\n")
         self.console.log(f"time taken: {datetime.now() - start_time}")
@@ -114,7 +120,7 @@ class DBWorker():
             organization = randint(1, 30)
             latitude, longitude = fake.latlng()
             country = randint(1,20)
-            self.cursor.execute(sql.SQL('insert into public.places("Name", "Organization", "longitude", "latitude", "Country") values ({0}, {1}, {2}, {3}, {4})'.format(name, str(organization), str(longitude), str(latitude), str(country))))
+            self.cursor.execute(sql.SQL('insert into public.places("Name", "Organization", "longitude", "latitude", "Country") values ({0}, {1}, {2}, {3}, {4});'.format(name, str(organization), str(longitude), str(latitude), str(country))))
             self.connection.commit()
         self.console.log("places generated successfully\n")
         self.console.log(f"time taken: {datetime.now() - start_time}")
@@ -125,7 +131,7 @@ class DBWorker():
             name = "'" + fake.company() + "'" if random.random() >= 0.5 else None
             latitude, longitude = fake.latlng()
             country = randint(1,20)
-            self.cursor.execute(sql.SQL('insert into public.stocks("name", "longitude", "latitude", "country") values ({0}, {1}, {2}, {3})'.format(name, str(longitude), str(latitude), str(country))))
+            self.cursor.execute(sql.SQL('insert into public.stocks("name", "longitude", "latitude", "country") values ({0}, {1}, {2}, {3});'.format(name if name != None else "'None'", str(longitude), str(latitude), str(country))))
             self.connection.commit()
         self.console.log("stocks generated successfully\n")
         self.console.log(f"time taken: {datetime.now() - start_time}")
@@ -134,24 +140,63 @@ class DBWorker():
         start_time = datetime.now()
         parsed_names = Client().run()
         for type in track(parsed_names, description="generating types"):
-            self.cursor.execute(sql.SQL('insert into public.types("name") values ({})'.format("'" + type + "'")))
+            self.cursor.execute(sql.SQL('insert into public.types("name") values ({});'.format("'" + type + "'")))
             self.connection.commit()
         self.console.log("types generated successfully\n")
         self.console.log(f"time taken: {datetime.now() - start_time}")
+
+
+    def gen_items(self, fake:Faker):
+        start_time = datetime.now()
+        parsed_names = Client().run()
+        for item in track(range(10000), description="generating items"):
+            name = "'" + fake.bothify(text="Item by code: ???????-#########-?-##-??") + "'"
+            arrival_time = "'" + self.random_time("0:01", "23:59", random.random()) + "'"
+            arrival_date = "'" + self.random_date("2001-01-01", datetime.today().strftime('%Y-%m-%d'), random.random()) + "'"
+            type = randint(1, len(parsed_names))
+            stock = randint(1, 1000)
+            point_of_departure = randint(1, 20)
+            self.cursor.execute(sql.SQL('insert into public.items("name", "arrival_time", "arrival_date", "type", "stock", "point of departure") values ({0},{1},{2},{3},{4},{5});'.format(name, arrival_time, arrival_date, str(type), str(stock), str(point_of_departure))))
+            self.connection.commit()
+        self.console.log("types generated successfully\n")
+        self.console.log(f"time taken: {datetime.now() - start_time}")
+
+
+    def gen_emploees_stocks(self):
+        start_time = datetime.now()
+        for conns in track(range(1000), description="generating connections"):
+            stock_id = randint(1, 1000) 
+            emploee_id = randint(1, 1000)
+            self.cursor.execute(sql.SQL('insert into public.emploees_stocks("stock_id", "emploee_id") values ({0}, {1});'.format(str(stock_id), str(emploee_id))))
+            self.connection.commit()
+        self.console.log("connections between emploees and stocks generated successfully\n")
+        self.console.log(f"time taken: {datetime.now() - start_time}")
+    def generate(self):
+        fake_en = Faker(locale="en_US")
+        fake_ru = Faker(locale="ru_RU")
+        start_time = datetime.now()
+        try:
+            self.gen_countries(fake=fake_en)
+            self.gen_positions(fake=fake_ru)
+            self.gen_priorities()
+            self.gen_organizations(fake=fake_ru)
+            self.gen_emploees(fake_en=fake_en, fake_ru=fake_ru)
+            self.gen_places(fake=fake_en)
+            self.gen_stocks(fake=fake_en)
+            self.gen_types()
+            self.gen_items(fake=fake_en)
+            self.gen_emploees_stocks()
+            self.console.log("completed✅")
+        except: 
+            self.console.log("[bold red] something went wrong.\nPlease restart the script")
+        self.console.log(f"time taken: {datetime.now() - start_time}")
+
 
     def close(self):
         self.cursor.close()
         self.connection.close()
 
 if __name__ == "__main__":
-    fake_en = Faker(locale="en_US")
-    fake_ru = Faker(locale="ru_RU")
     worker = DBWorker()
-    worker.gen_countries(fake=fake_en)
-    worker.gen_positions(fake=fake_ru)
-    worker.gen_priorities()
-    worker.gen_organizations(fake=fake_ru)
-    worker.gen_emploees(fake_en=fake_en, fake_ru=fake_ru)
-    worker.gen_places(fake=fake_en)
-    worker.gen_types()
+    worker.generate()
     worker.close()
