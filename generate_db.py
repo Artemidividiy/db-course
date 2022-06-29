@@ -171,6 +171,7 @@ class DBWorker():
             self.connection.commit()
         self.console.log("connections between emploees and stocks generated successfully\n")
         self.console.log(f"time taken: {datetime.now() - start_time}")
+
     def generate(self):
         fake_en = Faker(locale="en_US")
         fake_ru = Faker(locale="ru_RU")
