@@ -3,8 +3,9 @@ from sqlalchemy import column
 import streamlit as st
 import psycopg2
 import pandas as pd
+from matplotlib import pyplot as plt
 
-select_items = "SELECT * FROM public.items;"
+select_items = open("./запросы/s2.sql", 'r').read()
 class DB:
     def __init__(self) -> None:
         self.console = Console()
@@ -65,8 +66,8 @@ class Interface :
         data, columns = self.db.request(query=query)
         print(columns)
         data = self.gen_dict(columns, data)
-        self.console.log(data[0])
-        self.console.log(data[:20:])
+        # self.console.log(data[0])
+        # self.console.log(data[:20:])
         data = pd.DataFrame(data[1::], columns=data[0])
         st.dataframe(data)
 
@@ -75,7 +76,20 @@ class Interface :
         query = st.text_area(label="query",value=select_items)
         st.write("result table")
         self.get_items(query)
+        # self.display_plots(query=query)
 
+    def display_plots(self, query):
+        st.write("## displayed plots:")
+        data, columns = self.db.request(query=query)
+        target = dict()
+        for i in data: 
+            if i[3] not in target: target[i[3]] = 1
+            else : target[i[3]] += 1 
+        # self.console.log(list(target.keys()))
+        fig1, ax1 = plt.subplots()
+        self.console.log("target", target)
+        ax1.pie(list(target.values()), labels=list(target.keys()), autopct='%1.1f%%')
+        st.pyplot(fig1)
 if __name__ == "__main__":
     interface = Interface()
     interface.run()

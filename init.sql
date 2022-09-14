@@ -183,7 +183,7 @@ ALTER TABLE public.emploees_stocks
         ON DELETE CASCADE;
 ALTER TABLE public.items
     ADD CONSTRAINT "items_point of departure_fkey" FOREIGN KEY ("point of departure")
-        REFERENCES public.countries (id) MATCH SIMPLE
+        REFERENCES public.places (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID;

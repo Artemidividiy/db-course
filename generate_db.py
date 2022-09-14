@@ -155,7 +155,7 @@ class DBWorker():
             arrival_date = "'" + self.random_date("2001-01-01", datetime.today().strftime('%Y-%m-%d'), random.random()) + "'"
             type = randint(1, len(parsed_names))
             stock = randint(1, 1000)
-            point_of_departure = randint(1, 20)
+            point_of_departure = randint(1, 40)
             self.cursor.execute(sql.SQL('insert into public.items("name", "arrival_time", "arrival_date", "type", "stock", "point of departure") values ({0},{1},{2},{3},{4},{5});'.format(name, arrival_time, arrival_date, str(type), str(stock), str(point_of_departure))))
             self.connection.commit()
         self.console.log("types generated successfully\n")
