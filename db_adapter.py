@@ -1,0 +1,2 @@
+class DBAdapter(): 
+    pass 

@@ -5,8 +5,6 @@ import psycopg2
 import pandas as pd
 
 select_items = "SELECT * FROM public.items;"
-def select_colums(table:str):
-    return f"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{table}'"
 class DB:
     def __init__(self) -> None:
         self.console = Console()
@@ -61,15 +59,9 @@ class Interface :
             i = new_item
         target = [column_names] + items
         self.console.log(target[:20:])
-        # for i in range(len(items)):
-        #     for j in range(len(items[i])):
-        #         target[list(target.keys())[j]].append(items[i][j])
-        # self.console.log(target)
         return target
 
     def get_items(self, query):
-        # rows = self.db.request(select_colums("items"))
-        # st.write([rows[i][0] for i in range(len(rows))])
         data, columns = self.db.request(query=query)
         print(columns)
         data = self.gen_dict(columns, data)
